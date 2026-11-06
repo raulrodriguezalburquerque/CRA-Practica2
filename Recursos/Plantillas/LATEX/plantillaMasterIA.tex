@@ -1,0 +1,106 @@
+%% Ejemplo de la plantilla de latex para las diapositivas del Máster en IA 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Valores para el ratio de aspecto: 43, 169 
+\documentclass[10pt, envcountsect, presentation, aspectratio=169]{beamer}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Incluir fichero de estilo del máster
+\input plantillaMasterIA.sty
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Información que aparecerá en la portada
+\title[Nombre]{Razonamiento Aproximado Basado en Lógica Difusa}
+\subtitle{Informe 2 de Conocimiento y Razonamiento Aproximado} % short title for footer
+
+\author[E1. Apellidos1, E2. Apellidos2] % Para el pie de página, poner los autores abreviados separados por comas.
+{%
+	\sc{Estudiante1 Apellidos1}\\  % Autor 1
+%	\textit{Ciencia de la Computación e Inteligencia Artificial}\\ % Area de conocimiento
+%	\textit{Dept. Ingeniería de la Información y las Comunicaciones}\\  % Departamento
+	\\
+	\sc{Estudiante2 Apellidos 2}\\ % Autor 2
+%	\textit{Ciencia de la Computación e Inteligencia Artificial}\\  % Area de conocimiento
+%	\textit{Dept. Ingeniería de la Información y las Comunicaciones}\\  % Departamento
+	\\   % No dejes espacio entre esta línea y la llave siguiente 
+}
+
+\institute[DIIC]% % Poner las iniciales de los diferentes departamentos de los autores separadas por comas.
+{
+	\textit{Universidad de Murcia}
+}
+
+\date{2025/2026} % Curso académico
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Contenido de las diapositivas
+\setbeamerfont{normal text}{size=\normalsize} % Modifica el tamaño del texto de las diapositivas.
+\AtBeginDocument{\usebeamerfont{normal text}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}	
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}[plain]
+	\titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}{Título del tema}{Título de la sección}
+% \vskip -1cm % Para subir (-) o bajar el texto
+\textbf{Título de la subsección (o del concepto en su caso)}
+	\begin{itemize}
+	\item Texto ...
+	\item Texto ... \citep{Russell2020} ...
+		\begin{itemize}
+		\normalsize % Quítalo si quieres que se reduzca automáticamente el tamaño del texto	
+		\item[--] Texto ...
+		\item[--] La \href{https://es.wikipedia.org/wiki/Inteligencia_artificial}{Inteligencia Artificial} ...
+			\begin{itemize}
+			\normalsize % Quítalo si quieres que se reduzca automáticamente el tamaño del texto
+			\item[$\bullet$] Texto ...
+			\end{itemize}	
+			\end{itemize} 
+	\item Texto ...		
+	\item Texto ...
+	\end{itemize}
+\end{frame}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAFÍA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Redefinimos la apariencia
+\setbeamertemplate{headline}{}
+\setbeamertemplate{frametitle}{\vskip 0.5cm	\small{\textbf{\insertframetitle}}}
+\setbeamertemplate{footline}{}
+
+% Mostramos la bibliografía
+% \begin{frame}[allowframebreaks] %% Si ocupa más de una página
+\begin{frame} %% Si hay sólo una página
+	\frametitle{Referencias}
+	\footnotesize
+	% \vskip -5cm %% Para ajustar la distancia al comienzo
+	\bibliographystyle{abbrvnat}
+	\bibliography{references}	
+\end{frame}    
+		
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

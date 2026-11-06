@@ -1,0 +1,199 @@
+%%%%%%%%%%%%%%%%%%%%
+% Formato de estilo para el Master en IA de la UMU
+%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[spanish, english]{babel}
+\uselanguage{spanish}
+
+%% Fuentes
+\usepackage[utf8]{inputenc}
+%MVV lo quito porque no la tengo instalada
+\usepackage{newtxtext,newtxmath} % txfonts.sty, se divide en dos fuentes
+
+%% Símbolos y entornos matemáticos
+\usepackage{amsmath}
+\usepackage{amsfonts}  % fonts from the American Mathematical Society
+\usepackage{mathtools} % Extiende símbolos, más flechas
+
+%%% Herramientas para tablas
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{tabularx}
+\usepackage{colortbl}
+\usepackage{hhline}
+
+%%% Inclusión de Gráficos
+\usepackage{graphicx}
+
+%%% Generación de Gráficos
+\usepackage{tikz}
+\usetikzlibrary{calc, patterns, snakes, arrows} %
+
+%%% Colores. http://latexcolor.com/
+\definecolor{UMUblue}{RGB}{0,59,73} % Azul de la identidad visual corporativa de la UMU
+
+%%% Hyperenlaces
+\usepackage{xurl}
+\usepackage{hyperref}
+\hypersetup{
+	colorlinks=true,  
+	linkcolor= UMUblue,
+	urlcolor=blue,
+	citecolor=blue
+}
+
+\urlstyle{same}
+
+%%% Bibliografía
+\usepackage{natbib}
+\setcitestyle{authoryear,open={\color{blue}(},close={\color{blue})}} % Comandos relacionados con las citaciones
+
+%%% Algoritmos
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+\renewcommand{\algorithmicrequire}{\textbf{Entrada:}}
+\renewcommand{\algorithmicensure}{\textbf{Salida:}}
+
+%% Algoritmo con tamaño de letra script en la cabecera.
+%% El tamaño del resto del algoritmo se define en el
+%% propio algoritmo 
+\newenvironment{algoritmo-ss}[1][htb]{%
+	\floatname{algorithm}{\scriptsize Algoritmo}% Update algorithm name
+	\begin{algorithm}[#1]%
+	}{\end{algorithm}}
+	
+%% Imágenes del máster  
+\pgfdeclareimage[width=2.2cm]{masterlogo}{images/Logo-MIA.png}
+\pgfdeclareimage[width=5cm]{UMUlogo}{images/SelloUMU-negativo.png}
+\pgfdeclareimage[width=\paperwidth, height=\paperheight]{titlebackground}{images/UMUbackground.png}
+
+%% Colores para los itemizes y enumerates
+
+\setbeamercolor{itemize item}{fg=UMUblue}  
+\setbeamercolor{itemize subitem}{fg=UMUblue}
+\setbeamercolor{itemize subsubitem}{fg=UMUblue}
+
+\setbeamercolor{enumerate item}{fg=UMUblue}
+\setbeamercolor{enumerate subitem}{fg=UMUblue}
+\setbeamercolor{enumerate subsubitem}{fg=UMUblue}
+
+%% Tamaño de los títulos de las diapositivas
+\setbeamerfont{frametitle}{series=\Large}
+\setbeamerfont{framesubtitle}{series=\large}
+
+% Sin símbolos de navegación
+\setbeamertemplate{navigation symbols}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Apariencia de la cabecera de todas las diapositivas excepto el frame principal
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\setbeamercolor{lower separation line head}{bg=black}
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip%
+  \vskip0cm % % Pon un valor negativo si quieres que el título del tema aparezca más pegado arriba
+  \hskip-0.25cm
+  \begin{beamercolorbox}[wd=\textwidth]{frametitle}% Se adapta a la dimensión de la página
+  \begin{minipage}[t][1.2cm][b]{\dimexpr\paperwidth-4.0cm\relax}%
+        \usebeamerfont*{frametitle}
+        \color{UMUblue}\insertframetitle%
+        \ifx  \insertframesubtitle\@empty%
+          \strut\par%
+        \else
+          \par{\usebeamerfont*{framesubtitle}{\color{UMUblue} \insertframesubtitle}\strut\par}%
+        \fi%%
+  \end{minipage}%
+  \hfill%
+  \begin{minipage}[t][1.4cm][b]{1.75cm}
+        \hfill \pgfuseimage{masterlogo} 
+  \end{minipage}%
+  \end{beamercolorbox}%
+  \vskip0ex
+  \begin{beamercolorbox}[colsep=0.2pt,wd=\paperwidth]{lower separation line head}
+  \end{beamercolorbox}
+}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Apariencia para el pie de cada frame (formato compacto)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\setbeamertemplate{footline}
+{
+  \leavevmode%
+  \hrule
+  \hbox{%
+  % Primera caja para autores e institución
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,left]{section in head/foot}%
+	\usebeamerfont{author in head/foot}
+	\hspace*{1em}
+	\insertshortauthor~~\beamer@ifempty{\insertshortinstitute}{}{(\insertshortinstitute)}
+  \end{beamercolorbox}%
+  %
+  % Segunda caja para la sección
+  \begin{beamercolorbox}[wd=.6\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+  	\color{UMUblue} 
+	\usebeamerfont{title in head/foot}
+    \insertsubtitle % 
+  \end{beamercolorbox}
+  %
+  % Tercera caja para el curso y el número de página
+  \begin{beamercolorbox}[wd=.2\paperwidth,ht=2.25ex,dp=1ex,right]{section in head/foot}%
+	\usebeamerfont{date in head/foot}
+	\insertdate
+	\hspace*{1em}
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+  \end{beamercolorbox}}
+}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Apariencia para el primer frame: la portada
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\setbeamertemplate{title page}{
+  \setbeamerfont{title}{size=\normalsize}
+  \setbeamerfont{subtitle}{size=\small}
+  \setbeamerfont{autores}{size=\scriptsize}
+  % Realizamos un dibujo
+  \begin{tikzpicture}[remember picture, overlay]
+    % Con un gráfico que hará de fondo
+    \node[above right, inner sep=0pt] at (current page.south west)
+    {
+      \pgfuseimage{titlebackground}
+    };
+    % Calcula las dimensiones de la caja
+    \newlength{\boxwidth}
+    \setlength{\boxwidth}{0.5\paperwidth}
+    \newlength{\boxheight}
+    \setlength{\boxheight}{0.40\paperheight}
+	% Desplazamiento a la derecha de la caja
+    \newlength{\shifttitle}
+    \setlength{\shifttitle}{5mm}
+    % Se pondrá un nodo justo en la mitad del folio y en el borde izquierdo.
+    \coordinate (start) at (current page.west);
+    % Dibuja el nodo de texto centrado en la mitad del folio
+    \node[white, anchor=west, 
+    	  minimum width=\boxwidth, 
+	  	  minimum height=\boxheight,  
+		  xshift=\shifttitle,  % Pero lo desplazamos un poco a la derecha para que no toque el borde.
+		 ] at (current page.west) {
+		 	\begin{minipage}{\boxwidth} % El contenido no puede ocupar más de medio folio
+				\usebeamerfont{title}
+    			\inserttitle % El título de la presentación.
+				\vskip0.5em
+				\usebeamerfont{subtitle}% El subtítulo de la presentación.
+				{\insertsubtitle\\[0.9cm]}
+		 		 \usebeamerfont{autores}
+				{\insertauthor\\[0.4cm]}%\par % Los autores de la presentación.
+				{\insertinstitute\\[0.4cm]} % Los centros de los autores.
+				{Máster en Inteligencia Artificial \vskip 0.5\baselineskip % Todos participan en el máster
+				\insertdate % Fecha (curso académico)
+				}
+ 			\end{minipage}};
+  \setlength{\shifttitle}{-.30\textwidth}
+  \node[xshift=\shifttitle] at (current page.east) {\pgfuseimage{UMUlogo}}; 
+  \end{tikzpicture}
+}
+\makeatother
