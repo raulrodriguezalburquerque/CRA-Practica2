@@ -1,0 +1,39 @@
+codigo,nombre,hex,R,G,B
+1,Desierto polar,#FFEBDB,255,235,219
+2,Tundra seca,#B4E4A2,180,228,162
+3,Tundra húmeda,#84EBC2,132,235,194
+4,Tundra muy húmeda,#49ECF1,73,236,241
+5,Tundra pluvial,#56E6FF,86,230,255
+6,Desierto boreal,#C0C376,192,195,118
+7,Matorral boreal seco,#99CC86,153,204,134
+8,Bosque boreal húmedo,#62D2A8,98,210,168
+9,Bosque boreal muy húmedo,#00D4D9,0,212,217
+10,Bosque boreal pluvial,#00CEFF,0,206,255
+11,Desierto templado frío,#C0A359,192,163,89
+12,Matorral templado frío,#A7AB59,167,171,89
+13,Estepa templada fría,#7DB46A,125,180,106
+14,Bosque húmedo templado frío,#3BBA8F,59,186,143
+15,Bosque muy húmedo templado frío,#00BCC2,0,188,194
+16,Bosque pluvial templado frío,#00B6F2,0,182,242
+17,Desierto templado cálido,#BA8346,186,131,70
+18,Matorral xerófilo templado cálido,#A78B3C,167,139,60
+19,Matorral espinoso templado cálido,#8E933D,142,147,61
+20,Bosque seco templado cálido,#629C50,98,156,80
+21,Bosque húmedo templado cálido,#00A276,0,162,118
+22,Bosque muy húmedo templado cálido,#00A4AB,0,164,171
+23,Bosque pluvial templado cálido,#009EDD,0,158,221
+24,Desierto subtropical,#A26B2A,162,107,42
+25,Matorral xerófilo subtropical,#8F741F,143,116,31
+26,Floresta espinosa subtropical,#757D1F,117,125,31
+27,Bosque seco subtropical,#478536,71,133,54
+28,Selva húmeda subtropical,#008B5E,0,139,94
+29,Selva muy húmeda subtropical,#008D95,0,141,149
+30,Selva pluvial subtropical,#0088C8,0,136,200
+31,Desierto tropical,#964D1F,150,77,31
+32,Matorral xerófilo tropical,#8A550B,138,85,11
+33,Floresta espinosa tropical,#775E00,119,94,0
+34,Bosque muy seco tropical,#5C6600,92,102,0
+35,Bosque seco tropical,#2A6F1B,42,111,27
+36,Selva húmeda tropical,#007447,0,116,71
+37,Selva muy húmeda tropical,#00767F,0,118,127
+38,Selva pluvial tropical,#0071B4,0,113,180

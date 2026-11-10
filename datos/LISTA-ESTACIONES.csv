@@ -1,0 +1,23 @@
+Identificador,Provincia,Municipio,Zona UTM,UTM X, UTM Y,Latitud,Longitud,Altitud
+BU02,Burgos,Valle de Valdelucio,30T,407277,4733270,"42,75","-4,13",971
+LU02,Lugo,Monforte de Lemos,29T,130127,4715890,"42,51",-7.51,331
+LE07,León,Bustillo del Páramo,30T,272071,4705080,"42,46","-5,77",853
+HU14,Huesca,Aínsa-Sobrarbe,30T,760884,4697990,"42,39","0,17",559
+P01,Palencia,Torquemada,30T,392330,4656290,"42,05","-4,3",741
+Z14,Zaragoza,Borja,30T,623871,4634770,"41,86","-1,51",376
+Z03,Zaragoza,Quinto,30T,707465,4584840,"41,39","-0,52",239
+CS03,Castellón/Castelló,San Rafael del Río,31T,784970,4499150,"40,59",0.22,217
+M01,Madrid,San Fernando de Henares,30T,457867,4473610,"40,41","-3,5",553
+V21,Valencia/València,Requena,30T,657938,4366610,"39,43","-1,16",589
+AB10,Albacete,Caudete,30T,675585,4289270,"38,73","-0,98",563
+CR11,Ciudad Real,Montemiel,30S,510308,4283170,"38,7","-2,88",883
+BA01,Badajoz,Zalamea de la Serena,29S,265910,4284560,"38,68",-5.65,455
+BA05,Badajoz,Jerez de los Caballeros,29S,173113,4243640,"38,28",-6.77,264
+A12,Alicante/Alacant,Pilar de la Horadada,30S,692408,4193490,"37,87","-0,81",54
+H07,Huelva,Puebla de Guzmán,29S,124659,4164620,"37,55",-7.22,248
+AL07,Almería,Huércal-Overa,30S,598735,4141210,"37,41","-1,88",303
+H05,Huelva,Niebla,29S,169098,4139930,"37,35",-6.68,28
+H10,Huelva,Almonte,29S,191221,4116990,"37,15",-6.52,13
+CA04,Cádiz,Villamartín,30S,266049,4080680,"36,84","-5,62",146
+TE01,Tenerife,La Orotava,28N,344000,3122000,"28,27","-16,64",3715
+SP01,Murcia,San Pedro del Pinatar,30S,697459,4188412,"37,83","-0,78",13
