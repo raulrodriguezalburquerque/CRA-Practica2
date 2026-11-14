@@ -1,5 +1,6 @@
 """Elementos comunes a las versiones de Biotem: variables, tabla de reglas y mecanismo de inferencia."""
 from motor_difuso import VariableLinguistica, inferir_mamdani, mostrar_traza
+from comun import TRIPLA, BIOTEMPERATURA
 
 # Etiquetas para las regiones latitudinales y los pisos altitudinales
 REGIONES = ["Tropical", "Subtropical", "Templado cálido", "Templado frío", "Boreal", "Subpolar", "Polar"]
@@ -25,17 +26,7 @@ ALTITUD = VariableLinguistica("altitud", (0, 5000), {
     "Alpino":       ("trapecio", [4437.5, 4562.5, 4687.5, 4812.5]),
     "Nival":        ("trapecio", [4687.5, 4812.5, 5000, 5000]),
 })
-# Biotemperatura
-BIOTEMPERATURA = VariableLinguistica("biotemperatura", (0, 30), {
-    "Polar":             ("trapecio", [0, 0, 1.2, 1.8]),
-    "Subpolar":          ("trapecio", [1.2, 1.8, 2.7, 3.3]),
-    "Boreal":            ("trapecio", [2.7, 3.3, 5.4, 6.6]),
-    "Templado frío":     ("trapecio", [5.4, 6.6, 10.9, 13.1]),
-    "Templado cálido":   ("trapecio", [10.9, 13.1, 16.9, 19.1]),
-    "Subtropical":       ("trapecio", [16.9, 19.1, 22.9, 25.1]),
-    "Tropical":          ("trapecio", [22.9, 25.1, 30, 30]),
-    "Línea de escarcha": ("triangulo", [16.9, 18, 19.1]),
-})
+# La biotemperatura (salida) está en el comun.py de la raíz, porque también la usa el Zonificador
 # Variables de entrada para el motor difuso de biotem
 VARIABLES_BIOTEM = {"latitud": LATITUD, "altitud": ALTITUD}
 
@@ -52,7 +43,7 @@ TABLA_BIOTEM = {
 }
 
 # Mecanismo de inferencia Mamdani clásico
-TRIPLA, IMPLICACION, DEFUZZIFICADOR = "zadeh", "mamdani", "centroide"
+IMPLICACION, DEFUZZIFICADOR = "mamdani", "centroide"
 
 # Entradas para el motor difuso (latitud en valor absoluto).
 def entradas(latitud, altitud):

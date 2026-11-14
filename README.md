@@ -42,7 +42,9 @@ Para activar el entorno y usar directamente `python`:
 | Ruta | Contenido |
 |---|---|
 | `sistemas.py` | Punto de entrada: `biotem()`, `zonify()` y pruebas. |
+| `comun.py` | Elementos compartidos por Biotem y el Zonificador (tripla y biotemperatura). |
 | `biotem/` | Biotem: elementos comunes (`comun.py`) y las tres versiones (`canonica.py`, `no_canonica.py`, `tsk.py`). |
+| `zonificador/` | Zonificador: variables, tabla y nombres de zonas (`comun.py`) y reglas e inferencia (`clasificador.py`). |
 | `motor_difuso.py` | Motor de inferencia difusa de la plantilla (no se modifica). |
 | `datos.py` | Lectura de estaciones, cuadrícula y datos mensuales; cálculo de ABT y APP. |
 | `mapas.py` | Dibujo de los mapas de zonas de vida y de ambigüedad. |

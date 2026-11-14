@@ -5,10 +5,10 @@ Rellenad las partes marcadas con TODO a partir de vuestra especificación
 (Sección 1.1 del Informe 2). Cada elemento debe coincidir EXACTAMENTE con
 lo que figura en el informe. Mirad ejemplo_incendio.py para ver el formato.
 """
-import numpy as np
-from motor_difuso import VariableLinguistica, es, Y, O, NO, clasificar, mostrar_traza, procesar_csv
+from motor_difuso import procesar_csv
 from biotem import canonica, no_canonica, tsk
-from biotem.comun import TRIPLA
+from zonificador import clasificador
+from zonificador.comun import NOMBRES_ZONAS
 
 # ===========================================================================
 # BIOTEM
@@ -25,33 +25,9 @@ def biotem(latitud, altitud, version=1, traza=False):
 # ===========================================================================
 # ZONIFICADOR
 # ===========================================================================
-ABT = VariableLinguistica("abt", (0, 30), {
-    # TODO
-})
-APP = VariableLinguistica("app", (np.log2(62.5), np.log2(16000)), {
-    # TODO (si trabajáis en escala logarítmica, parámetros en log2)
-}, transformacion=np.log2)
-PER = VariableLinguistica("per", (-3, 5), {
-    # TODO (solo si vuestras reglas usan la PER)
-}, transformacion=np.log2)
-VARIABLES_ZONIFICADOR = {"abt": ABT, "app": APP, "per": PER}
-
-NOMBRES_ZONAS = {
-    # TODO: código (1-38) -> nombre, según la Tabla 1 del documento de Coloreado de Mapas
-}
-# Reglas: (antecedente, código de zona de vida)
-REGLAS_ZONIFICADOR = [
-    # TODO
-]
-METODO_DECISION = "maximo"   # TODO: "maximo" o "suma"; justificadlo en el informe
-
 def zonify(abt, app, traza=False):
     """Zona de vida asignada: código, nombre, grado, margen y grados de las 38 zonas."""
-    entradas = {"abt": abt, "app": app, "per": 58.93 * abt / app if app > 0 else 0.0}
-    codigo, grado, grados, t = clasificar(entradas, VARIABLES_ZONIFICADOR, REGLAS_ZONIFICADOR,
-                                          list(range(1, 39)), tripla=TRIPLA, metodo=METODO_DECISION)
-    if traza:
-        mostrar_traza(t)
+    codigo, grado, grados = clasificador.inferir(abt, app, traza)
     segundo = sorted(grados.values(), reverse=True)[1]
     resultado = {"zona_codigo": codigo, "zona_nombre": NOMBRES_ZONAS.get(codigo, ""), "zona_grado": grado,
                  "zona_margen": grado - segundo}
@@ -66,6 +42,11 @@ if __name__ == "__main__":
     for v in (1, 2, 3):
         print(f"Biotem v{v} - BU02 (42.75, 971 m):")
         print("   ABT =", round(biotem(42.75, 971, v, traza=True), 4), "°C")
+    # Zonificador: puntos P1, P2 y P3 de la práctica
+    for punto, abt, app in (("P1", 15.2, 640), ("P2", 16.5, 495), ("P3", 12.3, 820)):
+        print(f"Zonificador - {punto} (ABT {abt} °C, APP {app} mm):")
+        r = zonify(abt, app, traza=True)
+        print(f"   zona {r['zona_codigo']} {r['zona_nombre']}, grado {r['zona_grado']:.2f}, margen {r['zona_margen']:.2f}")
     #
     # Estaciones: biotemperatura medida (de los datos mensuales) e inferida
     # from datos import leer_estaciones, leer_mensuales, abt_app
