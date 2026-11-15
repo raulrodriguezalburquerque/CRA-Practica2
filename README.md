@@ -50,6 +50,7 @@ Para activar el entorno y usar directamente `python`:
 | `mapas.py` | Dibujo de los mapas de zonas de vida y de ambigüedad. |
 | `PaletaZonasVida.csv` | Códigos, nombres y colores de las 38 zonas de vida. |
 | `datos/` | Estaciones, datos climáticos mensuales, cuadrícula de España y silueta (IGN). |
+| `resultados/` | CSV de salida, separados por sistema: `biotem/` y `zonificador/`. |
 | `Recursos/` | Material original proporcionado por la asignatura (sin modificar). |
 
 Todos los scripts se ejecutan desde la raíz del repositorio.
@@ -65,8 +66,8 @@ Trazas de verificación (Biotem con BU02 en sus tres versiones y Zonificador con
 Procesamiento por lotes de un CSV (separado por comas, con punto decimal):
 
 ```bash
-.venv/Scripts/python sistemas.py biotem entrada.csv salida.csv
-.venv/Scripts/python sistemas.py zonify entrada.csv salida.csv
+.venv/Scripts/python sistemas.py biotem entrada.csv resultados/biotem/salida.csv
+.venv/Scripts/python sistemas.py zonify entrada.csv resultados/zonificador/salida.csv
 ```
 
 - `biotem` necesita las columnas `latitud` y `altitud`, y añade `abt_v1`, `abt_v2` y `abt_v3`.
