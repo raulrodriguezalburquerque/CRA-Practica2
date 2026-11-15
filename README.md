@@ -56,4 +56,29 @@ Todos los scripts se ejecutan desde la raíz del repositorio.
 
 ## Ejecución
 
-*(Pendiente: se completará al implementar los sistemas.)*
+Trazas de verificación (Biotem con BU02 en sus tres versiones y Zonificador con P1, P2 y P3):
+
+```bash
+.venv/Scripts/python sistemas.py
+```
+
+Procesamiento por lotes de un CSV (separado por comas, con punto decimal):
+
+```bash
+.venv/Scripts/python sistemas.py biotem entrada.csv salida.csv
+.venv/Scripts/python sistemas.py zonify entrada.csv salida.csv
+```
+
+- `biotem` necesita las columnas `latitud` y `altitud`, y añade `abt_v1`, `abt_v2` y `abt_v3`.
+- `zonify` necesita las columnas `abt` y `app`, y añade `zona_codigo`, `zona_nombre`, `zona_grado`,
+  `zona_margen` y `grado_01` a `grado_38`.
+
+Desde Python también se pueden usar directamente:
+
+```python
+from sistemas import biotem, zonify, biotem_csv, zonify_csv
+biotem(42.75, 971, 1, traza=True)   # versión 1, 2 o 3
+zonify(15.2, 640, traza=True)
+```
+
+(En Linux / macOS, `.venv/bin/python` en lugar de `.venv/Scripts/python`.)

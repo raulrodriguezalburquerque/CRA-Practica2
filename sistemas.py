@@ -34,10 +34,25 @@ def zonify(abt, app, traza=False):
     return resultado
 
 # ===========================================================================
-# Uso por lotes (ejemplos; ajustad nombres de columnas y archivos)
+# USO POR LOTES SOBRE UN CSV
 # ===========================================================================
-if __name__ == "__main__":
-    # Verificación: comparad con vuestros cálculos a mano
+# Biotem para una fila: biotemperatura inferida con cada versión (columnas abt_v1, abt_v2, abt_v3)
+def biotem_fila(latitud, altitud, versiones=(1, 2, 3)):
+    return {f"abt_v{v}": biotem(latitud, altitud, v) for v in versiones}
+
+# Aplica Biotem a cada fila de un CSV con columnas de latitud y altitud
+def biotem_csv(entrada, salida, col_latitud="latitud", col_altitud="altitud", versiones=(1, 2, 3)):
+    return procesar_csv(entrada, salida, biotem_fila, [col_latitud, col_altitud], versiones=versiones)
+
+# Aplica el Zonificador a cada fila de un CSV con columnas de ABT y APP
+def zonify_csv(entrada, salida, col_abt="abt", col_app="app"):
+    return procesar_csv(entrada, salida, zonify, [col_abt, col_app])
+
+# ===========================================================================
+# VERIFICACIÓN
+# ===========================================================================
+# Trazas para comparar con los cálculos a mano
+def verificar():
     for v in (1, 2, 3):
         print(f"Biotem v{v} - BU02 (42.75, 971 m):")
         biotem(42.75, 971, v, traza=True)
@@ -45,6 +60,23 @@ if __name__ == "__main__":
     for punto, abt, app in (("P1", 15.2, 640), ("P2", 16.5, 495), ("P3", 12.3, 820)):
         print(f"Zonificador - {punto} (ABT {abt} °C, APP {app} mm):")
         zonify(abt, app, traza=True)
+
+# Uso:
+#   python sistemas.py                                 -> trazas de verificación
+#   python sistemas.py biotem entrada.csv salida.csv   -> añade abt_v1, abt_v2 y abt_v3
+#   python sistemas.py zonify entrada.csv salida.csv   -> añade zona_codigo ... grado_38
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) == 1:
+        verificar()
+    elif len(sys.argv) == 4 and sys.argv[1] in ("biotem", "zonify"):
+        sistema, entrada, salida = sys.argv[1:]
+        (biotem_csv if sistema == "biotem" else zonify_csv)(entrada, salida)
+        print(f"Resultados guardados en {salida}")
+    else:
+        print("Uso: python sistemas.py [biotem|zonify entrada.csv salida.csv]")
+
+    # Ejemplos para el ejercicio 3 (pendientes)
     #
     # Estaciones: biotemperatura medida (de los datos mensuales) e inferida
     # from datos import leer_estaciones, leer_mensuales, abt_app
@@ -64,4 +96,3 @@ if __name__ == "__main__":
     # from mapas import leer_paleta, dibujar_mapa_zonas, dibujar_mapa_margen
     # dibujar_mapa_zonas(res, leer_paleta(), ruta_shape="gadm41_ESP_1.shp")
     # dibujar_mapa_margen(res, ruta_shape="gadm41_ESP_1.shp")
-    pass
