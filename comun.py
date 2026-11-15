@@ -6,14 +6,17 @@ from motor_difuso import VariableLinguistica
 # Tripla de operadores para Y, O y NO (mínimo, máximo y complemento)
 TRIPLA = "zadeh"
 
-# Traza: cabecera de cada fase de la inferencia
+# Función auxiliar de la traza que muestra la cabecera de cada fase de la inferencia
 def mostrar_fase(numero, titulo):
     print(f" [{numero}] {titulo}")
 
-# Traza: grado de pertenencia de cada entrada a sus etiquetas (solo las que no valen 0)
+# Función auxiliar de la traza que muestra el grado de pertenencia de cada entrada a sus etiquetas
 def mostrar_fuzzificacion(entradas, variables):
+    # Recorremos cada variable de entrada
     for nombre, variable in variables.items():
+        # Nos quedamos solo con las etiquetas cuyo grado no es 0
         grados = {e: g for e, g in variable.grados(entradas[nombre]).items() if g > 0}
+        # Mostramos el valor de la entrada y su grado en cada etiqueta
         print(f"   {nombre} = {entradas[nombre]:g}: " + ", ".join(f"{e}={g:.4f}" for e, g in grados.items()))
 
 # Biotemperatura

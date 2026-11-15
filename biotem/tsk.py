@@ -45,12 +45,15 @@ REGLAS = [(es("latitud", region), _consecuente(*RECTAS[region])) for region in R
 
 # Función de inferencia de biotem con base de reglas canónica TSK de orden 1
 def inferir(latitud, altitud, traza=False):
+    # Calculamos las entradas para el motor difuso
     e = entradas(latitud, altitud)
+    # Inferimos la biotemperatura con el mecanismo TSK (media ponderada)
     valor, t = inferir_tsk(e, VARIABLES_BIOTEM, REGLAS, tripla=TRIPLA)
     # Acotamos el valor a [0, 30] °C
     acotado = min(30.0, max(0.0, valor))
+    # Si se pide la traza, mostramos cada fase de la inferencia
     if traza:
-        # La altitud no se fuzzifica: solo interviene en el consecuente
+        # Solo se fuzzifica la latitud, ya que la altitud solo interviene en el consecuente
         mostrar_fase(1, "Fuzzificación")
         mostrar_fuzzificacion(e, {"latitud": LATITUD})
         print(f"   altitud = {e['altitud']:g} m (solo en el consecuente)")

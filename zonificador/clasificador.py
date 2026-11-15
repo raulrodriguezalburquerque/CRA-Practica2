@@ -37,11 +37,15 @@ METODO_DECISION = "suma"
 
 # Función de inferencia del Zonificador: zona asignada, su grado, el margen y los grados de las 38 zonas
 def inferir(abt, app, traza=False):
+    # Calculamos las entradas para el motor difuso
+    # La PER se calcula a partir de la ABT y la APP
     entradas = {"abt": abt, "app": app, "per": 58.93 * abt / app if app > 0 else 0.0}
+    # Clasificamos con suma normalizada: zona asignada, su grado y los grados de las 38 zonas
     codigo, grado, grados, t = clasificar(entradas, VARIABLES_ZONIFICADOR, REGLAS, list(range(1, 39)),
                                           tripla=TRIPLA, metodo=METODO_DECISION)
-    # Margen: diferencia entre la zona asignada y la segunda con más grado
+    # Calculamos el margen: diferencia entre el grado de la zona asignada y el de la segunda con más grado
     margen = grado - sorted(grados.values(), reverse=True)[1]
+    # Si se pide la traza, mostramos cada fase de la inferencia
     if traza:
         # La PER no se muestra porque no interviene en las reglas
         mostrar_fase(1, "Fuzzificación")

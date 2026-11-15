@@ -51,9 +51,12 @@ def entradas(latitud, altitud):
 
 # Biotemperatura inferida con una base de reglas Mamdani.
 def inferir_con_mamdani(reglas, latitud, altitud, traza=False):
+    # Calculamos las entradas para el motor difuso
     e = entradas(latitud, altitud)
+    # Inferimos la biotemperatura con el mecanismo de Mamdani
     valor, t = inferir_mamdani(e, VARIABLES_BIOTEM, reglas, BIOTEMPERATURA,
                                tripla=TRIPLA, implicacion=IMPLICACION, defuzzificador=DEFUZZIFICADOR)
+    # Si se pide la traza, mostramos cada fase de la inferencia
     if traza:
         mostrar_fase(1, "Fuzzificación")
         mostrar_fuzzificacion(e, VARIABLES_BIOTEM)
