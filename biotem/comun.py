@@ -1,6 +1,6 @@
 """Elementos comunes a las versiones de Biotem: variables, tabla de reglas y mecanismo de inferencia."""
 from motor_difuso import VariableLinguistica, inferir_mamdani, mostrar_traza
-from comun import TRIPLA, BIOTEMPERATURA
+from comun import TRIPLA, BIOTEMPERATURA, mostrar_fase, mostrar_fuzzificacion
 
 # Etiquetas para las regiones latitudinales y los pisos altitudinales
 REGIONES = ["Tropical", "Subtropical", "Templado cálido", "Templado frío", "Boreal", "Subpolar", "Polar"]
@@ -51,8 +51,14 @@ def entradas(latitud, altitud):
 
 # Biotemperatura inferida con una base de reglas Mamdani.
 def inferir_con_mamdani(reglas, latitud, altitud, traza=False):
-    valor, t = inferir_mamdani(entradas(latitud, altitud), VARIABLES_BIOTEM, reglas, BIOTEMPERATURA,
+    e = entradas(latitud, altitud)
+    valor, t = inferir_mamdani(e, VARIABLES_BIOTEM, reglas, BIOTEMPERATURA,
                                tripla=TRIPLA, implicacion=IMPLICACION, defuzzificador=DEFUZZIFICADOR)
     if traza:
+        mostrar_fase(1, "Fuzzificación")
+        mostrar_fuzzificacion(e, VARIABLES_BIOTEM)
+        mostrar_fase(2, "Reglas disparadas (grado de disparo)")
         mostrar_traza(t)
+        mostrar_fase(3, "Agregación (máximo) y defuzzificación (centroide)")
+        print(f"   ABT = {valor:.4f} °C")
     return valor

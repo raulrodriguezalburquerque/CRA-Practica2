@@ -2,8 +2,8 @@
 # Zonificador: clasificador difuso de zonas de vida
 # ===========================================================================
 from motor_difuso import es, Y, O, clasificar, mostrar_traza
-from comun import TRIPLA
-from .comun import PRECIPITACIONES, TABLA_ZONIFICADOR, VARIABLES_ZONIFICADOR
+from comun import TRIPLA, mostrar_fase, mostrar_fuzzificacion
+from .comun import PRECIPITACIONES, TABLA_ZONIFICADOR, VARIABLES_ZONIFICADOR, ABT, APP, NOMBRES_ZONAS
 
 # Función auxiliar que devuelve si la precipitación es una de las etiquetas etqs
 def _app(*etqs):
@@ -35,11 +35,21 @@ REGLAS = _reglas()
 # Decisión por suma normalizada
 METODO_DECISION = "suma"
 
-# Función de inferencia del Zonificador: zona asignada, su grado y los grados de las 38 zonas
+# Función de inferencia del Zonificador: zona asignada, su grado, el margen y los grados de las 38 zonas
 def inferir(abt, app, traza=False):
     entradas = {"abt": abt, "app": app, "per": 58.93 * abt / app if app > 0 else 0.0}
     codigo, grado, grados, t = clasificar(entradas, VARIABLES_ZONIFICADOR, REGLAS, list(range(1, 39)),
                                           tripla=TRIPLA, metodo=METODO_DECISION)
+    # Margen: diferencia entre la zona asignada y la segunda con más grado
+    margen = grado - sorted(grados.values(), reverse=True)[1]
     if traza:
+        # La PER no se muestra porque no interviene en las reglas
+        mostrar_fase(1, "Fuzzificación")
+        mostrar_fuzzificacion(entradas, {"abt": ABT, "app": APP})
+        mostrar_fase(2, "Reglas disparadas (grado de disparo)")
         mostrar_traza(t)
-    return codigo, grado, grados
+        mostrar_fase(3, "Suma normalizada (grado de cada zona)")
+        print("   " + ", ".join(f"zona {c}={g:.4f}" for c, g in grados.items() if g > 0))
+        mostrar_fase(4, "Decisión")
+        print(f"   zona {codigo} {NOMBRES_ZONAS[codigo]}, grado {grado:.4f}, margen {margen:.4f}")
+    return codigo, grado, margen, grados

@@ -2,7 +2,8 @@
 # Biotem versión 3: TSK de orden 1
 # ===========================================================================
 from motor_difuso import es, inferir_tsk, mostrar_traza
-from .comun import REGIONES, VARIABLES_BIOTEM, TRIPLA, entradas
+from comun import mostrar_fase, mostrar_fuzzificacion
+from .comun import REGIONES, LATITUD, VARIABLES_BIOTEM, TRIPLA, entradas
 
 """Biotem versión 3: TSK de orden 1, ABT = b + m * L - 0,006 * h."""
 
@@ -44,8 +45,17 @@ REGLAS = [(es("latitud", region), _consecuente(*RECTAS[region])) for region in R
 
 # Función de inferencia de biotem con base de reglas canónica TSK de orden 1
 def inferir(latitud, altitud, traza=False):
-    valor, t = inferir_tsk(entradas(latitud, altitud), VARIABLES_BIOTEM, REGLAS, tripla=TRIPLA)
-    if traza:
-        mostrar_traza(t)
+    e = entradas(latitud, altitud)
+    valor, t = inferir_tsk(e, VARIABLES_BIOTEM, REGLAS, tripla=TRIPLA)
     # Acotamos el valor a [0, 30] °C
-    return min(30.0, max(0.0, valor))
+    acotado = min(30.0, max(0.0, valor))
+    if traza:
+        # La altitud no se fuzzifica: solo interviene en el consecuente
+        mostrar_fase(1, "Fuzzificación")
+        mostrar_fuzzificacion(e, {"latitud": LATITUD})
+        print(f"   altitud = {e['altitud']:g} m (solo en el consecuente)")
+        mostrar_fase(2, "Reglas disparadas (grado de disparo y salida de cada regla)")
+        mostrar_traza(t)
+        mostrar_fase(3, "Media ponderada y recorte a [0, 30] °C")
+        print(f"   media ponderada = {valor:.4f} °C -> ABT = {acotado:.4f} °C")
+    return acotado

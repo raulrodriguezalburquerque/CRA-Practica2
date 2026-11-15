@@ -27,10 +27,9 @@ def biotem(latitud, altitud, version=1, traza=False):
 # ===========================================================================
 def zonify(abt, app, traza=False):
     """Zona de vida asignada: código, nombre, grado, margen y grados de las 38 zonas."""
-    codigo, grado, grados = clasificador.inferir(abt, app, traza)
-    segundo = sorted(grados.values(), reverse=True)[1]
+    codigo, grado, margen, grados = clasificador.inferir(abt, app, traza)
     resultado = {"zona_codigo": codigo, "zona_nombre": NOMBRES_ZONAS.get(codigo, ""), "zona_grado": grado,
-                 "zona_margen": grado - segundo}
+                 "zona_margen": margen}
     resultado.update({f"grado_{c:02d}": g for c, g in grados.items()})
     return resultado
 
@@ -41,12 +40,11 @@ if __name__ == "__main__":
     # Verificación: comparad con vuestros cálculos a mano
     for v in (1, 2, 3):
         print(f"Biotem v{v} - BU02 (42.75, 971 m):")
-        print("   ABT =", round(biotem(42.75, 971, v, traza=True), 4), "°C")
+        biotem(42.75, 971, v, traza=True)
     # Zonificador: puntos P1, P2 y P3 de la práctica
     for punto, abt, app in (("P1", 15.2, 640), ("P2", 16.5, 495), ("P3", 12.3, 820)):
         print(f"Zonificador - {punto} (ABT {abt} °C, APP {app} mm):")
-        r = zonify(abt, app, traza=True)
-        print(f"   zona {r['zona_codigo']} {r['zona_nombre']}, grado {r['zona_grado']:.2f}, margen {r['zona_margen']:.2f}")
+        zonify(abt, app, traza=True)
     #
     # Estaciones: biotemperatura medida (de los datos mensuales) e inferida
     # from datos import leer_estaciones, leer_mensuales, abt_app
