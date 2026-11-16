@@ -1,0 +1,130 @@
+﻿Biotem v1 - BU02 (latitud 42.75, altitud 971 m):
+ [1] Fuzzificaci├│n
+   latitud = 42.75: Templado c├ílido=0.5321, Templado fr├¡o=0.4679
+   altitud = 971: Basal=0.5580, Premontano=0.4420
+ [2] Reglas disparadas (grado de disparo)
+   regla=15, consecuente=Templado c├ílido, grado_disparo=0.5321
+   regla=16, consecuente=Templado fr├¡o, grado_disparo=0.4420
+   regla=22, consecuente=Templado fr├¡o, grado_disparo=0.4679
+   regla=23, consecuente=Boreal, grado_disparo=0.4420
+ [3] Agregaci├│n (m├íximo) y defuzzificaci├│n (centroide)
+   ABT = 10.9931 ┬░C
+
+Biotem v2 - BU02 (latitud 42.75, altitud 971 m):
+ [1] Fuzzificaci├│n
+   latitud = 42.75: Templado c├ílido=0.5321, Templado fr├¡o=0.4679
+   altitud = 971: Basal=0.5580, Premontano=0.4420
+ [2] Reglas disparadas (grado de disparo)
+   regla=3, consecuente=Templado c├ílido, grado_disparo=0.5321
+   regla=4, consecuente=Templado fr├¡o, grado_disparo=0.4679
+   regla=5, consecuente=Boreal, grado_disparo=0.4420
+ [3] Agregaci├│n (m├íximo) y defuzzificaci├│n (centroide)
+   ABT = 10.9931 ┬░C
+
+Biotem v3 - BU02 (latitud 42.75, altitud 971 m):
+ [1] Fuzzificaci├│n
+   latitud = 42.75: Templado c├ílido=0.5321, Templado fr├¡o=0.4679
+   altitud = 971 m (solo en el consecuente)
+ [2] Reglas disparadas (grado de disparo y salida de cada regla)
+   regla=3, grado_disparo=0.5321, salida_regla=6.2708
+   regla=4, grado_disparo=0.4679, salida_regla=6.2708
+ [3] Media ponderada y recorte a [0, 30] ┬░C
+   media ponderada = 6.2708 ┬░C -> ABT = 6.2708 ┬░C
+
+Zonificador - BU02 (ABT 10.54 ┬░C, APP 636.0 mm):
+ [1] Fuzzificaci├│n
+   abt = 10.54: Templado fr├¡o=1.0000
+   app = 636: Moderada=1.0000
+ [2] Reglas disparadas (grado de disparo)
+   regla=14, clase=14, grado_disparo=1.0000
+ [3] Suma normalizada (grado de cada zona)
+   zona 14=1.0000
+ [4] Decisi├│n
+   zona 14 Bosque h├║medo templado fr├¡o, grado 1.0000, margen 1.0000
+
+
+
+Biotem v1 - P01 (latitud 42.05, altitud 741 m):
+ [1] Fuzzificaci├│n
+   latitud = 42.05: Templado c├ílido=0.6218, Templado fr├¡o=0.3782
+   altitud = 741: Basal=1.0000
+ [2] Reglas disparadas (grado de disparo)
+   regla=15, consecuente=Templado c├ílido, grado_disparo=0.6218
+   regla=22, consecuente=Templado fr├¡o, grado_disparo=0.3782
+ [3] Agregaci├│n (m├íximo) y defuzzificaci├│n (centroide)
+   ABT = 12.8063 ┬░C
+
+Biotem v2 - P01 (latitud 42.05, altitud 741 m):
+ [1] Fuzzificaci├│n
+   latitud = 42.05: Templado c├ílido=0.6218, Templado fr├¡o=0.3782
+   altitud = 741: Basal=1.0000
+ [2] Reglas disparadas (grado de disparo)
+   regla=3, consecuente=Templado c├ílido, grado_disparo=0.6218
+   regla=4, consecuente=Templado fr├¡o, grado_disparo=0.3782
+ [3] Agregaci├│n (m├íximo) y defuzzificaci├│n (centroide)
+   ABT = 12.8063 ┬░C
+
+Biotem v3 - P01 (latitud 42.05, altitud 741 m):
+ [1] Fuzzificaci├│n
+   latitud = 42.05: Templado c├ílido=0.6218, Templado fr├¡o=0.3782
+   altitud = 741 m (solo en el consecuente)
+ [2] Reglas disparadas (grado de disparo y salida de cada regla)
+   regla=3, grado_disparo=0.6218, salida_regla=7.9217
+   regla=4, grado_disparo=0.3782, salida_regla=7.9217
+ [3] Media ponderada y recorte a [0, 30] ┬░C
+   media ponderada = 7.9217 ┬░C -> ABT = 7.9217 ┬░C
+
+Zonificador - P01 (ABT 11.86 ┬░C, APP 474.3 mm):
+ [1] Fuzzificaci├│n
+   abt = 11.86: Templado fr├¡o=0.5636, Templado c├ílido=0.4364
+   app = 474.3: Escasa=0.7677, Moderada=0.2323
+ [2] Reglas disparadas (grado de disparo)
+   regla=13, clase=13, grado_disparo=0.5636
+   regla=14, clase=14, grado_disparo=0.2323
+   regla=19, clase=19, grado_disparo=0.4364
+   regla=20, clase=20, grado_disparo=0.2323
+ [3] Suma normalizada (grado de cada zona)
+   zona 13=0.3848, zona 14=0.1586, zona 19=0.2979, zona 20=0.1586
+ [4] Decisi├│n
+   zona 13 Estepa templada fr├¡a, grado 0.3848, margen 0.0869
+
+
+
+Biotem v1 - BA05 (latitud 38.28, altitud 264 m):
+ [1] Fuzzificaci├│n
+   latitud = 38.28: Templado c├ílido=1.0000
+   altitud = 264: Basal=1.0000
+ [2] Reglas disparadas (grado de disparo)
+   regla=15, consecuente=Templado c├ílido, grado_disparo=1.0000
+ [3] Agregaci├│n (m├íximo) y defuzzificaci├│n (centroide)
+   ABT = 15.0000 ┬░C
+
+Biotem v2 - BA05 (latitud 38.28, altitud 264 m):
+ [1] Fuzzificaci├│n
+   latitud = 38.28: Templado c├ílido=1.0000
+   altitud = 264: Basal=1.0000
+ [2] Reglas disparadas (grado de disparo)
+   regla=3, consecuente=Templado c├ílido, grado_disparo=1.0000
+ [3] Agregaci├│n (m├íximo) y defuzzificaci├│n (centroide)
+   ABT = 15.0000 ┬░C
+
+Biotem v3 - BA05 (latitud 38.28, altitud 264 m):
+ [1] Fuzzificaci├│n
+   latitud = 38.28: Templado c├ílido=1.0000
+   altitud = 264 m (solo en el consecuente)
+ [2] Reglas disparadas (grado de disparo y salida de cada regla)
+   regla=3, grado_disparo=1.0000, salida_regla=12.2431
+ [3] Media ponderada y recorte a [0, 30] ┬░C
+   media ponderada = 12.2431 ┬░C -> ABT = 12.2431 ┬░C
+   
+Zonificador - BA05 (ABT 15.98 ┬░C, APP 500.6 mm):
+ [1] Fuzzificaci├│n
+   abt = 15.98: Templado c├ílido=1.0000
+   app = 500.6: Escasa=0.4937, Moderada=0.5063
+ [2] Reglas disparadas (grado de disparo)
+   regla=19, clase=19, grado_disparo=0.4937
+   regla=20, clase=20, grado_disparo=0.5063
+ [3] Suma normalizada (grado de cada zona)
+   zona 19=0.4937, zona 20=0.5063
+ [4] Decisi├│n
+   zona 20 Bosque seco templado c├ílido, grado 0.5063, margen 0.0125

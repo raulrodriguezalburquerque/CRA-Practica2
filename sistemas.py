@@ -51,15 +51,23 @@ def zonify_csv(entrada, salida, col_abt="abt", col_app="app"):
 # ===========================================================================
 # VERIFICACIÓN
 # ===========================================================================
+# Estaciones de verificación
+ESTACIONES_VERIFICACION = [
+    ("BU02", 42.75, 971, 10.54, 636.0),
+    ("P01",  42.05, 741, 11.86, 474.3),
+    ("BA05", 38.28, 264, 15.98, 500.6),
+]
+
 # Función que muestra las trazas para comparar con los cálculos a mano
 def verificar():
-    # Biotem: estación BU02 con las tres versiones
-    for v in (1, 2, 3):
-        print(f"Biotem v{v} - BU02 (42.75, 971 m):")
-        biotem(42.75, 971, v, traza=True)
-    # Zonificador: puntos P1, P2 y P3 de la práctica
-    for punto, abt, app in (("P1", 15.2, 640), ("P2", 16.5, 495), ("P3", 12.3, 820)):
-        print(f"Zonificador - {punto} (ABT {abt} °C, APP {app} mm):")
+    # Recorremos cada estación de verificación
+    for id_, latitud, altitud, abt, app in ESTACIONES_VERIFICACION:
+        # Biotem con las tres versiones
+        for v in (1, 2, 3):
+            print(f"Biotem v{v} - {id_} (latitud {latitud}, altitud {altitud} m):")
+            biotem(latitud, altitud, v, traza=True)
+        # Zonificador con la ABT y la APP medidas
+        print(f"Zonificador - {id_} (ABT {abt} °C, APP {app} mm):")
         zonify(abt, app, traza=True)
 
 # Uso desde la línea de comandos:

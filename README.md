@@ -57,7 +57,8 @@ Todos los scripts se ejecutan desde la raíz del repositorio.
 
 ## Ejecución
 
-Trazas de verificación (Biotem con BU02 en sus tres versiones y Zonificador con P1, P2 y P3):
+Trazas de verificación de las estaciones BU02, P01 y BA05 (Biotem en sus tres versiones y Zonificador
+con la ABT y la APP medidas):
 
 ```bash
 .venv/Scripts/python sistemas.py
