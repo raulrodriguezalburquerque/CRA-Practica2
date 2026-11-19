@@ -42,6 +42,7 @@ Para activar el entorno y usar directamente `python`:
 | Ruta | Contenido |
 |---|---|
 | `sistemas.py` | Punto de entrada: `biotem()`, `zonify()` y pruebas. |
+| `explotacion.py` | Aplicación de los sistemas a las estaciones y a la cuadrícula, con métricas y comparativas. |
 | `comun.py` | Elementos compartidos por Biotem y el Zonificador (tripla y biotemperatura). |
 | `biotem/` | Biotem: elementos comunes (`comun.py`) y las tres versiones (`canonica.py`, `no_canonica.py`, `tsk.py`). |
 | `zonificador/` | Zonificador: variables, tabla y nombres de zonas (`comun.py`) y reglas e inferencia (`clasificador.py`). |
@@ -50,7 +51,7 @@ Para activar el entorno y usar directamente `python`:
 | `mapas.py` | Dibujo de los mapas de zonas de vida y de ambigüedad. |
 | `PaletaZonasVida.csv` | Códigos, nombres y colores de las 38 zonas de vida. |
 | `datos/` | Estaciones, datos climáticos mensuales, cuadrícula de España y silueta (IGN). |
-| `resultados/` | CSV de salida, separados por sistema: `biotem/` y `zonificador/`. |
+| `resultados/` | CSV de salida: estaciones y métricas en la raíz, y cuadrícula separada por sistema en `biotem/` y `zonificador/`. |
 | `Recursos/` | Material original proporcionado por la asignatura (sin modificar). |
 
 Todos los scripts se ejecutan desde la raíz del repositorio.
@@ -63,6 +64,21 @@ con la ABT y la APP medidas):
 ```bash
 .venv/Scripts/python sistemas.py
 ```
+
+Explotación sobre las estaciones y la cuadrícula:
+
+```bash
+.venv/Scripts/python explotacion.py
+```
+
+Genera:
+
+- `resultados/estaciones.csv`: ABT y APP medidas (años completos), ABT inferida por cada versión, su error y la zona
+  asignada con la ABT medida y con la inferida. TE01 y SP01 no tienen datos mensuales, así que solo llevan la ABT inferida.
+- `resultados/metricas_estaciones.csv`: sesgo, MAE, RMSE, error máximo y coincidencia de zona de cada versión.
+- `resultados/biotem/cuadricula.csv`: ABT inferida por cada versión en los puntos de la cuadrícula.
+- `resultados/zonificador/cuadricula_v1.csv` y `cuadricula_v3.csv`: cadena Biotem → Zonificador con la versión 1 y la 3
+  (la versión 2 da los mismos resultados que la 1).
 
 Procesamiento por lotes de un CSV (separado por comas, con punto decimal):
 
