@@ -79,6 +79,8 @@ Genera:
 - `resultados/biotem/cuadricula.csv`: ABT inferida por cada versión en los puntos de la cuadrícula.
 - `resultados/zonificador/cuadricula_v1.csv` y `cuadricula_v3.csv`: cadena Biotem → Zonificador con la versión 1 y la 3
   (la versión 2 da los mismos resultados que la 1).
+- `resultados/figuras/`: continuidad de la ABT inferida frente a la latitud (`continuidad_latitud.png`) y a la altitud
+  (`continuidad_altitud.png`) con v1 y v3, y ABT medida frente a inferida en las estaciones (`medida_inferida.png`).
 
 Procesamiento por lotes de un CSV (separado por comas, con punto decimal):
 

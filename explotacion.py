@@ -5,6 +5,10 @@ import glob
 import os
 import numpy as np
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
 from sistemas import biotem, zonify
 from datos import leer_estaciones, leer_cuadricula, leer_mensuales, abt_app
 
@@ -142,6 +146,85 @@ def comparativas(est, cua, zonas):
     igual = (zonas[1]["zona_codigo"] == zonas[3]["zona_codigo"]).mean()
     print(f"   zona igual con v1 y v3 en cuadrícula: {100 * igual:.1f} %")
 
+# ===========================================================================
+# FIGURAS
+# ===========================================================================
+# Carpeta de salida de las figuras
+CARPETA_FIGURAS = "resultados/figuras"
+# Color de cada versión
+VERSIONES_FIGURA = {1: ("Mamdani (v1)", "#3a6fb8"), 3: ("TSK (v3)", "#e06b3a")}
+SECUNDARIO, REJILLA = "#555555", "#dddddd"
+# Límites nítidos de las regiones latitudinales y de los pisos altitudinales
+LIMITES_LATITUD = (13, 27.5, 43, 58.5)
+LIMITES_ALTITUD = (1000, 2000, 3000)
+
+# Función auxiliar que aplica el estilo común a unos ejes
+def _estilo(ax):
+    # Coma decimal en los ejes
+    coma = FuncFormatter(lambda v, _: f"{v:g}".replace(".", ","))
+    ax.xaxis.set_major_formatter(coma)
+    ax.yaxis.set_major_formatter(coma)
+    ax.grid(color=REJILLA, lw=0.6)
+    ax.set_axisbelow(True)
+    for lado in ("top", "right"):
+        ax.spines[lado].set_visible(False)
+
+# Función auxiliar que dibuja la ABT de v1 y v3 al variar una entrada, con un panel por cada valor fijo de la otra
+def _paneles(xs, fijos, f_entradas, etiqueta_fijo, limites, xlabel):
+    fig, axes = plt.subplots(len(fijos), 1, figsize=(11, 8), sharex=True)
+    for ax, fijo in zip(axes, fijos):
+        # Curva de cada versión
+        for v, (nombre, color) in VERSIONES_FIGURA.items():
+            ax.plot(xs, [biotem(*f_entradas(x, fijo), v) for x in xs], color=color, lw=2.2, label=nombre)
+        # Límites nítidos dentro del rango dibujado
+        for limite in limites:
+            if xs[0] < limite < xs[-1]:
+                ax.axvline(limite, color=SECUNDARIO, ls=":", lw=1)
+        ax.set_title(etiqueta_fijo(fijo), loc="left", fontsize=11, fontweight="bold")
+        ax.set_ylabel("ABT inferida (°C)")
+        _estilo(ax)
+    axes[-1].set_xlabel(xlabel)
+    axes[-1].legend(loc="upper center", bbox_to_anchor=(0.5, -0.35), frameon=False, ncol=2)
+    return fig
+
+# Función auxiliar que guarda una figura en la carpeta de figuras
+def _guardar(fig, nombre):
+    fig.tight_layout()
+    fig.savefig(os.path.join(CARPETA_FIGURAS, nombre), dpi=300, facecolor="white", bbox_inches="tight")
+    plt.close(fig)
+
+# Función que genera las figuras de continuidad y de ABT medida frente a inferida
+def figuras(est):
+    os.makedirs(CARPETA_FIGURAS, exist_ok=True)
+    plt.rcParams.update({"font.size": 11})
+
+    # ABT frente a la latitud, con la altitud fija
+    fig = _paneles(np.arange(25, 50.01, 0.05), (0, 1000, 2000), lambda x, h: (x, h),
+                   lambda h: f"Altitud {h} m", LIMITES_LATITUD,
+                   "Latitud |φ| (°)  ·  líneas punteadas: límites de las regiones latitudinales")
+    _guardar(fig, "continuidad_latitud.png")
+
+    # ABT frente a la altitud, con la latitud fija
+    fig = _paneles(np.arange(0, 3501, 10), (28, 38, 43), lambda x, la: (la, x),
+                   lambda la: f"Latitud {la}°", LIMITES_ALTITUD,
+                   "Altitud (m)  ·  líneas punteadas: límites de los pisos altitudinales")
+    _guardar(fig, "continuidad_altitud.png")
+
+    # ABT medida frente a inferida en las estaciones con datos
+    con_datos = est.dropna(subset=["abt_medida"])
+    fig, ax = plt.subplots(figsize=(7, 6.5))
+    ax.plot([4, 20], [4, 20], color=SECUNDARIO, lw=1, ls=":", label="ABT inferida = ABT medida")
+    for (v, (nombre, color)), marcador in zip(VERSIONES_FIGURA.items(), ("o", "s")):
+        ax.scatter(con_datos["abt_medida"], con_datos[f"abt_v{v}"], color=color, marker=marcador, s=45,
+                   edgecolor="white", lw=1, zorder=3, label=nombre)
+    ax.set_xlim(4, 20)
+    ax.set_ylim(4, 20)
+    ax.set_aspect("equal")
+    ax.set_xlabel("Biotemperatura medida (°C)")
+    ax.set_ylabel("Biotemperatura inferida (°C)")
+    _estilo(ax)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), frameon=False, ncol=3, fontsize=10)
+    _guardar(fig, "medida_inferida.png")
 
 # ===========================================================================
 # PRUEBAS
@@ -159,3 +242,6 @@ if __name__ == "__main__":
     cua, zonas = cuadricula()
     print("\nComparativas:")
     comparativas(est, cua, zonas)
+    # Generamos las figuras
+    figuras(est)
+    print(f"\nFiguras guardadas en {CARPETA_FIGURAS}")
