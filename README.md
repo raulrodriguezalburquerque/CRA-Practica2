@@ -81,6 +81,9 @@ Genera:
   (la versión 2 da los mismos resultados que la 1).
 - `resultados/figuras/`: continuidad de la ABT inferida frente a la latitud (`continuidad_latitud.png`) y a la altitud
   (`continuidad_altitud.png`) con v1 y v3, y ABT medida frente a inferida en las estaciones (`medida_inferida.png`).
+- `resultados/mapas/`: mapa de zonas de vida (`mapa_zonas.png`) y de ambigüedad (`mapa_ambiguedad.png`) con la cadena
+  Biotem v1 → Zonificador, dibujados con las funciones de `mapas.py`, junto con el número de puntos de cada zona
+  (`zonas.csv`) y las parejas de zonas que compiten en los puntos con margen menor que 0,5 (`parejas_ambiguas.csv`).
 
 Procesamiento por lotes de un CSV (separado por comas, con punto decimal):
 

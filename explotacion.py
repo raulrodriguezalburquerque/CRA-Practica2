@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import FuncFormatter
 from sistemas import biotem, zonify
 from datos import leer_estaciones, leer_cuadricula, leer_mensuales, abt_app
+from mapas import leer_paleta, dibujar_mapa_zonas, dibujar_mapa_margen
+from zonificador.comun import NOMBRES_ZONAS
 
 # Rutas de entrada
 RUTA_ESTACIONES = "datos/LISTA-ESTACIONES.csv"
@@ -227,6 +229,64 @@ def figuras(est):
     _guardar(fig, "medida_inferida.png")
 
 # ===========================================================================
+# MAPAS
+# ===========================================================================
+# Rutas de la paleta, la silueta de España y la carpeta de salida de los mapas
+RUTA_PALETA = "PaletaZonasVida.csv"
+RUTA_SILUETA = "datos/IGN/gadm41_ESP_1.shp"
+CARPETA_MAPAS = "resultados/mapas"
+# Versión de Biotem elegida para los mapas
+VERSION_MAPAS = 1
+# Tamaño de cada punto, para que no queden huecos entre los puntos de la cuadrícula
+TAM_PUNTO = 10
+# Margen por debajo del cual consideramos ambigua la asignación de un punto
+UMBRAL_AMBIGUEDAD = 0.5
+# Columnas con el grado de cada zona
+COLUMNAS_GRADOS = [f"grado_{c:02d}" for c in range(1, 39)]
+
+# Función que dibuja el mapa de zonas de vida y el de ambigüedad con las funciones de la plantilla
+def mapas(zonas):
+    os.makedirs(CARPETA_MAPAS, exist_ok=True)
+    # Cuadrícula encadenada con la versión elegida
+    df = zonas[VERSION_MAPAS]
+    # Mapa de zonas de vida
+    fig = dibujar_mapa_zonas(df, leer_paleta(RUTA_PALETA), ruta_shape=RUTA_SILUETA,
+                             archivo=os.path.join(CARPETA_MAPAS, "mapa_zonas.png"), tam=TAM_PUNTO)
+    plt.close(fig)
+    # Mapa de ambigüedad
+    fig = dibujar_mapa_margen(df, ruta_shape=RUTA_SILUETA, archivo=os.path.join(CARPETA_MAPAS, "mapa_ambiguedad.png"),
+                              tam=TAM_PUNTO)
+    plt.close(fig)
+
+# Función que resume las zonas asignadas en la cuadrícula y las parejas de zonas que compiten en los puntos ambiguos
+def resumen_mapas(zonas):
+    # Cuadrícula encadenada con la versión elegida
+    df = zonas[VERSION_MAPAS]
+    # Número y porcentaje de puntos de cada zona
+    cuenta = df["zona_codigo"].value_counts()
+    resumen = pd.DataFrame({"zona": cuenta.index, "nombre": [NOMBRES_ZONAS[z] for z in cuenta.index],
+                            "puntos": cuenta.values, "porcentaje": 100 * cuenta.values / len(df)})
+    resumen.to_csv(os.path.join(CARPETA_MAPAS, "zonas.csv"), index=False)
+
+    # Puntos ambiguos y pareja formada por sus dos zonas con más grado
+    ambiguos = df[df["zona_margen"] < UMBRAL_AMBIGUEDAD]
+    dos_mayores = np.argsort(-ambiguos[COLUMNAS_GRADOS].to_numpy(), axis=1)[:, :2] + 1
+    parejas = pd.Series([tuple(sorted(p)) for p in dos_mayores]).value_counts()
+    parejas = pd.DataFrame({"zona_1": [p[0] for p in parejas.index], "zona_2": [p[1] for p in parejas.index],
+                            "puntos": parejas.values, "porcentaje": 100 * parejas.values / len(ambiguos)})
+    parejas.to_csv(os.path.join(CARPETA_MAPAS, "parejas_ambiguas.csv"), index=False)
+
+    # Mostramos el resumen
+    print(resumen.round(1).to_string(index=False))
+    print(f"   puntos con margen 1: {100 * (df['zona_margen'] == 1).mean():.1f} %")
+    print(f"   puntos ambiguos (margen < {UMBRAL_AMBIGUEDAD:g}): {100 * len(ambiguos) / len(df):.1f} %")
+    print(parejas.head(10).round(1).to_string(index=False))
+    # Puntos sin precipitación, posible fallo de los datos de la cuadrícula
+    sin_app = df[df["app"] == 0]
+    print(f"   puntos con APP = 0: {len(sin_app)}")
+    print(sin_app[["longitud", "latitud", "altitud", "zona_codigo"]].to_string(index=False))
+
+# ===========================================================================
 # PRUEBAS
 # ===========================================================================
 if __name__ == "__main__":
@@ -245,3 +305,7 @@ if __name__ == "__main__":
     # Generamos las figuras
     figuras(est)
     print(f"\nFiguras guardadas en {CARPETA_FIGURAS}")
+    # Dibujamos los mapas con la versión elegida y resumimos las zonas de la cuadrícula
+    mapas(zonas)
+    print(f"\nMapas guardados en {CARPETA_MAPAS} (versión {VERSION_MAPAS}). Resumen de la cuadrícula:")
+    resumen_mapas(zonas)
