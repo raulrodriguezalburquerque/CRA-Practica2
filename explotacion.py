@@ -2,17 +2,20 @@
 # Explotación de Biotem y el Zonificador sobre las estaciones y la cuadrícula
 # ===========================================================================
 import glob
+import textwrap
 import os
 import numpy as np
 import pandas as pd
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.colors import to_rgb
+from matplotlib.patches import FancyBboxPatch
 from matplotlib.ticker import FuncFormatter
 from sistemas import biotem, zonify
 from datos import leer_estaciones, leer_cuadricula, leer_mensuales, abt_app
 from mapas import leer_paleta, dibujar_mapa_zonas, dibujar_mapa_margen
-from zonificador.comun import NOMBRES_ZONAS
+from zonificador.comun import NOMBRES_ZONAS, TABLA_ZONIFICADOR, PRECIPITACIONES
 
 # Rutas de entrada
 RUTA_ESTACIONES = "datos/LISTA-ESTACIONES.csv"
@@ -243,6 +246,8 @@ TAM_PUNTO = 10
 UMBRAL_AMBIGUEDAD = 0.5
 # Columnas con el grado de cada zona
 COLUMNAS_GRADOS = [f"grado_{c:02d}" for c in range(1, 39)]
+# Número de transiciones más frecuentes que se resaltan en la tabla de zonas de vida
+N_TRANSICIONES = 4
 
 # Función que dibuja el mapa de zonas de vida y el de ambigüedad con las funciones de la plantilla
 def mapas(zonas):
@@ -285,6 +290,108 @@ def resumen_mapas(zonas):
     sin_app = df[df["app"] == 0]
     print(f"   puntos con APP = 0: {len(sin_app)}")
     print(sin_app[["longitud", "latitud", "altitud", "zona_codigo"]].to_string(index=False))
+    return parejas
+
+# Función auxiliar que devuelve la fila y la columna de dos celdas vecinas de la tabla de zonas de vida con las zonas a y b
+def _celdas_vecinas(a, b):
+    celdas = {z: [] for z in (a, b)}
+    for i, region in enumerate(TABLA_ZONIFICADOR):
+        for j, z in enumerate(TABLA_ZONIFICADOR[region]):
+            if z in celdas:
+                celdas[z].append((i, j))
+    for ca in celdas[a]:
+        for cb in celdas[b]:
+            if abs(ca[0] - cb[0]) + abs(ca[1] - cb[1]) == 1:
+                return ca, cb
+
+# Rangos de precipitación y de biotemperatura que se muestran en la cabecera de la tabla
+RANGOS_PRECIPITACION = ["< 125 mm", "125 – 250", "250 – 500", "500 – 1000", "1000 – 2000", "2000 – 4000",
+                        "4000 – 8000", "> 8000 mm"]
+RANGOS_BIOTEMPERATURA = ["< 1,5 °C", "1,5 – 3 °C", "3 – 6 °C", "6 – 12 °C", "12 – 18 °C", "18 – 24 °C", "> 24 °C"]
+# Color de cada región de biotemperatura en la tabla
+COLORES_REGIONES = ["#3b6db3", "#5aa3c8", "#2a9d8f", "#7ab648", "#e0a93b", "#e07040", "#c8384e"]
+# Tamaño de las celdas de la tabla y separación entre ellas
+ANCHO_ETIQUETA, ALTO_CABECERA, HUECO = 1.25, 0.6, 0.06
+
+# Función auxiliar que aclara un color mezclándolo con blanco
+def _aclarar(color, f):
+    return tuple(1 - f * (1 - np.array(color)))
+
+# Función auxiliar que dibuja una celda redondeada con una barra de color en el borde
+def _celda(ax, x, y, ancho, alto, fondo, barra=None, lado="abajo", alpha=1):
+    ax.add_patch(FancyBboxPatch((x, y), ancho, alto, boxstyle="round,pad=0,rounding_size=0.04",
+                                facecolor=fondo, edgecolor="none", alpha=alpha))
+    if barra is not None:
+        rect = (x, y + alto - 0.05, ancho, 0.05) if lado == "abajo" else (x, y, 0.05, alto)
+        ax.add_patch(plt.Rectangle(rect[:2], *rect[2:], facecolor=barra, edgecolor="none", alpha=alpha))
+
+# Función que dibuja la tabla de zonas de vida resaltando las transiciones más frecuentes (T1, T2, ...)
+def figura_transiciones(parejas):
+    paleta = leer_paleta(RUTA_PALETA)
+    regiones = list(TABLA_ZONIFICADOR)
+    # Celdas vecinas de cada una de las transiciones más frecuentes
+    transiciones = [_celdas_vecinas(a, b) for a, b in parejas.head(N_TRANSICIONES)[["zona_1", "zona_2"]].to_numpy()]
+    resaltadas = {TABLA_ZONIFICADOR[regiones[i]][j] for t in transiciones for i, j in t}
+    # Posición de cada columna y de cada fila
+    x0 = lambda j: ANCHO_ETIQUETA + HUECO + j
+    y0 = lambda i: ALTO_CABECERA + HUECO + i
+    fig, ax = plt.subplots(figsize=(16, 10))
+
+    # Cabecera con los niveles de precipitación
+    ax.text(ANCHO_ETIQUETA / 2, ALTO_CABECERA / 2, "Biotemperatura ↓\nPrecipitación →", ha="center", va="center",
+            fontsize=10, style="italic", color=SECUNDARIO)
+    for j, (nivel, rango) in enumerate(zip(PRECIPITACIONES, RANGOS_PRECIPITACION)):
+        _celda(ax, x0(j) + HUECO / 2, 0, 1 - HUECO, ALTO_CABECERA, "#efefef")
+        nivel = nivel.replace("Extremadamente", "Extr.")
+        ax.text(x0(j) + 0.5, 0.22, nivel, ha="center", va="center", fontsize=9.5, fontweight="bold")
+        ax.text(x0(j) + 0.5, 0.43, rango, ha="center", va="center", fontsize=9, color=SECUNDARIO)
+    ax.plot([0, x0(len(PRECIPITACIONES))], [ALTO_CABECERA + HUECO / 2] * 2, color="#444444", lw=1.5)
+
+    # Una fila por región de biotemperatura
+    for i, region in enumerate(regiones):
+        # Etiqueta de la región, con su color en el borde izquierdo
+        _celda(ax, 0, y0(i) + HUECO / 2, ANCHO_ETIQUETA, 1 - HUECO, _aclarar(to_rgb(COLORES_REGIONES[i]), 0.12),
+               COLORES_REGIONES[i], lado="izquierda")
+        ax.text(0.12, y0(i) + 0.38, region, ha="left", va="center", fontsize=11, fontweight="bold")
+        ax.text(0.12, y0(i) + 0.68, RANGOS_BIOTEMPERATURA[i], ha="left", va="center", fontsize=9, color=SECUNDARIO)
+        # Zonas de la fila, uniendo las celdas consecutivas de la misma zona
+        fila, j = TABLA_ZONIFICADOR[region], 0
+        while j < len(fila):
+            z, ancho = fila[j], 1
+            while j + ancho < len(fila) and fila[j + ancho] == z:
+                ancho += 1
+            activa = z in resaltadas
+            _celda(ax, x0(j) + HUECO / 2, y0(i) + HUECO / 2, ancho - HUECO, 1 - HUECO, _aclarar(paleta[z], 0.45),
+                   paleta[z], alpha=1 if activa else 0.3)
+            color_texto = "black" if activa else "#999999"
+            nombre = textwrap.fill(NOMBRES_ZONAS[z], 16 if ancho == 1 else 40)
+            ax.text(x0(j) + ancho / 2, y0(i) + 0.33, z, ha="center", va="center", fontsize=12, fontweight="bold",
+                    color=color_texto)
+            ax.text(x0(j) + ancho / 2, y0(i) + 0.48, nombre, ha="center", va="top", fontsize=8, color=color_texto,
+                    linespacing=1)
+            j += ancho
+
+    # Flecha y etiqueta de cada transición, cruzando el borde entre sus dos celdas
+    for k, ((ia, ja), (ib, jb)) in enumerate(transiciones, start=1):
+        # Transición vertical (biotemperatura): flecha entre filas, con la etiqueta a la derecha
+        if ja == jb:
+            x, y = x0(ja) + 0.5, y0(max(ia, ib))
+            inicio, fin, etiqueta = (x, y - 0.2), (x, y + 0.2), (x + 0.1, y)
+        # Transición horizontal (precipitación): flecha entre columnas, bajo los nombres, con la etiqueta a la izquierda
+        else:
+            x, y = x0(max(ja, jb)), y0(ia) + 0.85
+            inicio, fin, etiqueta = (x - 0.25, y), (x + 0.25, y), (x - 0.5, y)
+        ax.annotate("", xy=fin, xytext=inicio, arrowprops=dict(arrowstyle="<->", color="black", lw=2))
+        ax.text(*etiqueta, f"T{k}", ha="left", va="center", fontsize=10, fontweight="bold",
+                bbox=dict(boxstyle="round,pad=0.2", facecolor="white", edgecolor="black", lw=1.2))
+
+    ax.set_xlim(0, x0(len(PRECIPITACIONES)))
+    ax.set_ylim(y0(len(regiones)), 0)
+    ax.set_aspect("equal")
+    ax.axis("off")
+    fig.tight_layout()
+    fig.savefig(os.path.join(CARPETA_MAPAS, "tabla_transiciones.png"), dpi=300, facecolor="white", bbox_inches="tight")
+    plt.close(fig)
 
 # ===========================================================================
 # PRUEBAS
@@ -308,4 +415,6 @@ if __name__ == "__main__":
     # Dibujamos los mapas con la versión elegida y resumimos las zonas de la cuadrícula
     mapas(zonas)
     print(f"\nMapas guardados en {CARPETA_MAPAS} (versión {VERSION_MAPAS}). Resumen de la cuadrícula:")
-    resumen_mapas(zonas)
+    parejas = resumen_mapas(zonas)
+    # Dibujamos la tabla de zonas de vida con las transiciones más frecuentes
+    figura_transiciones(parejas)
